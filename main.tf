@@ -31,16 +31,26 @@ resource "aws_instance" "tf-ec2" {
     # "Name" = "created-by-tf"
     # "Name" = "created-by-tf-ubuntu"
     # "Name" = "${var.ec2_name}-instance"
-    "Name" = "${ local.mytag }-comes-from-locals"
+    "Name" = "${ local.mytag }-come-from-locals"
   }
 }
 
 resource "aws_s3_bucket" "tf-s3" {
-  #   bucket = "terraform-jimmy-bucket-test-new"
-  bucket = var.s3_bucket_name
+  # bucket = "terraform-jimmy-bucket-test-new"
+  # bucket = "${var.s3_bucket_name}-${count.index + 1}"
   #   acl = "private"
+
+  # count = var.num_of_buckets
+  
+  # count = var.num_of_buckets != 0 ? var.num_of_buckets : 3
+
+  for_each = toset(var.users)
+  bucket = "${var.s3_bucket_name}-${each.value}"
 }
 
-
+resource "aws_iam_user" "new_users" {
+  name = each.value
+  for_each = toset(var.users)
+}
 
 
