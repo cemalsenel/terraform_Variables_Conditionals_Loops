@@ -6,6 +6,8 @@ output "tf_example_s3_meta" {
   # value = aws_s3_bucket.tf-s3.region
   # value = aws_s3_bucket.tf-s3.*.region
   value = {for user in var.users : user => aws_s3_bucket.tf-s3[user].arn}
+  value = values(aws_s3_bucket.tf-s3)[*].arn
+
 }
 
 output "tf_example_private_ip" {
